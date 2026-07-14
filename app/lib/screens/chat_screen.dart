@@ -1,8 +1,2 @@
 import 'package:flutter/material.dart';
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Chat')), body: Center(child: Text('Chat Screen')));
-  }
-}
+class ChatScreen extends StatelessWidget{ final String? name; const ChatScreen({super.key, this.name}); @override Widget build(BuildContext context){ return Scaffold(appBar: AppBar(title: Text(name?? 'Chat')), body: Column(children: [Expanded(child: Center(child: Text('Chat with $name\nGmail Verified'))), Padding(padding: EdgeInsets.all(12), child: TextField(decoration: InputDecoration(hintText: 'Type message...', border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)))))])); } }

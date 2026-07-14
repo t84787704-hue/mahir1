@@ -1,0 +1,3 @@
+import 'package:flutter/material.dart';
+import 'login_screen.dart';
+class ProfileScreen extends StatelessWidget{ const ProfileScreen({super.key}); @override Widget build(BuildContext context){ return Scaffold(appBar: AppBar(title: Text('Profile')), body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [CircleAvatar(radius: 40, child: Text('U')), SizedBox(height: 10), Text('user@gmail.com'), SizedBox(height: 20), ElevatedButton(onPressed: ()=> Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=> const LoginScreen()), (r)=> false), child: Text('Logout'))]))); } }

@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-class WorkerDetailsScreen extends StatelessWidget {
-  const WorkerDetailsScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Worker Details')), body: Center(child: Text('Worker Details')));
-  }
-}
+import '../models/worker_model.dart';
+import 'chat_screen.dart';
+class WorkerDetailsScreen extends StatelessWidget{ final WorkerModel worker; const WorkerDetailsScreen({super.key, required this.worker}); @override Widget build(BuildContext context){ return Scaffold(appBar: AppBar(title: Text(worker.name)), body: Padding(padding: EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Center(child: CircleAvatar(radius: 50, child: Text(worker.name[0], style: TextStyle(fontSize: 40)))), SizedBox(height: 16), Center(child: Text(worker.name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))), Center(child: Text('${worker.category} • ⭐ ${worker.rating}')), SizedBox(height: 30), Row(children: [Expanded(child: OutlinedButton.icon(onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (_)=> ChatScreen(name: worker.name))), icon: Icon(Icons.chat), label: Text('Chat'))), SizedBox(width: 12), Expanded(child: ElevatedButton(onPressed: (){}, child: Text('Book ${worker.price}')) )])]))); } }
