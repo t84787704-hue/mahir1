@@ -36,25 +36,25 @@ class MahirApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mahir',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+      theme: ThemeData.light(),
       initialRoute: AppRoutes.splash,
       routes: {
-        AppRoutes.splash: (context) => const SplashScreen(),
-        AppRoutes.onboarding: (context) => const OnboardingScreen(),
-        AppRoutes.login: (context) => const LoginScreen(),
-        AppRoutes.accountType: (context) => const AccountTypeScreen(),
+        AppRoutes.splash: (context) => SplashScreen(),
+        AppRoutes.onboarding: (context) => OnboardingScreen(),
+        AppRoutes.login: (context) => LoginScreen(),
+        AppRoutes.accountType: (context) => AccountTypeScreen(),
         AppRoutes.customerProfile: (context) =>
-            const CustomerProfileScreen(),
+            CustomerProfileScreen(),
         AppRoutes.workerProfile: (context) =>
-            const WorkerProfileScreen(),
+            WorkerProfileScreen(),
         AppRoutes.home: (context) =>
-            const MainNavigationScreen(),
-        AppRoutes.search: (context) => const SearchScreen(),
+            MainNavigationScreen(),
+        AppRoutes.search: (context) => SearchScreen(),
         AppRoutes.workerDetails: (context) =>
-            const WorkerDetailsScreen(),
+            WorkerDetailsScreen(),
         AppRoutes.chatList: (context) =>
-            const ChatListScreen(),
-        AppRoutes.chat: (context) => const ChatScreen(),
+            ChatListScreen(),
+        AppRoutes.chat: (context) => ChatScreen(),
       },
     );
   }
