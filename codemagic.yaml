@@ -5,6 +5,8 @@ workflows:
     environment:
       flutter: stable
 
+    working_directory: app
+
     scripts:
       - flutter pub get
       - flutter build apk --release
