@@ -14,13 +14,16 @@ jobs:
         with:
           flutter-version: '3.22.0'
           channel: 'stable'
-      - name: Create Real App Files + Fix Firebase
+      - name: Create Real App Files + Fix Android v2
         run: |
           set -e
           ROOT="."
           if [ -f "./flutter/pubspec.yaml" ]; then ROOT="./flutter"; fi
-          echo "Root: $ROOT"
           cd $ROOT
+          echo "=== Deleting old Android v1 folder ==="
+          rm -rf android
+          echo "=== Creating fresh Android v2 folder ==="
+          flutter create --platforms=android --org com.example --project-name app --no-pub .
           rm -rf lib
           mkdir -p lib/models lib/services lib/screens/customer lib/screens/provider android/app
           echo 'bmFtZTogbWFoaXIxCmRlc2NyaXB0aW9uOiBNYWhpcjEgLSBXb3JsZHdpZGUgUmVhbCBTZXJ2aWNlcyBBcHAKcHVibGlzaF90bzogJ25vbmUnCnZlcnNpb246IDEuMC4wKzEKCmVudmlyb25tZW50OgogIHNkazogIj49My4wLjAgPDQuMC4wIgoKZGVwZW5kZW5jaWVzOgogIGZsdXR0ZXI6CiAgICBzZGs6IGZsdXR0ZXIKICBmaXJlYmFzZV9jb3JlOiBeMi4yNC4yCiAgZmlyZWJhc2VfYXV0aDogXjQuMTUuMwogIGNsb3VkX2ZpcmVzdG9yZTogXjQuMTUuOAogIGdvb2dsZV9zaWduX2luOiBeNi4xLjYKICBjdXBlcnRpbm9faWNvbnM6IF4xLjAuNgoKZGV2X2RlcGVuZGVuY2llczoKICBmbHV0dGVyX3Rlc3Q6CiAgICBzZGs6IGZsdXR0ZXIKICBmbHV0dGVyX2xpbnRzOiBeMy4wLjAKCmZsdXR0ZXI6CiAgdXNlcy1tYXRlcmlhbC1kZXNpZ246IHRydWU=' | base64 -d > pubspec.yaml
@@ -35,23 +38,21 @@ jobs:
           echo 'CmltcG9ydCAncGFja2FnZTpmaXJlYmFzZV9hdXRoL2ZpcmViYXNlX2F1dGguZGFydCc7CmltcG9ydCAncGFja2FnZTpnb29nbGVfc2lnbl9pbi9nb29nbGVfc2lnbl9pbi5kYXJ0JzsKaW1wb3J0ICdwYWNrYWdlOmNsb3VkX2ZpcmVzdG9yZS9jbG91ZF9maXJlc3RvcmUuZGFydCc7CgpjbGFzcyBBdXRoU2VydmljZSB7CiAgZmluYWwgX2F1dGggPSBGaXJlYmFzZUF1dGguaW5zdGFuY2U7CiAgZmluYWwgX2RiID0gRmlyZWJhc2VGaXJlc3RvcmUuaW5zdGFuY2U7CgogIFN0cmVhbTxVc2VyPz4gZ2V0IGF1dGhTdGF0ZSA9PiBfYXV0aC5hdXRoU3RhdGVDaGFuZ2VzKCk7CgogIEZ1dHVyZTxVc2VyPz4gc2lnbkluV2l0aEdvb2dsZSgpIGFzeW5jIHsKICAgIHRyeSB7CiAgICAgIGZpbmFsIGdvb2dsZVVzZXIgPSBhd2FpdCBHb29nbGVTaWduSW4oKS5zaWduSW4oKTsKICAgICAgaWYgKGdvb2dsZVVzZXIgPT0gbnVsbCkgcmV0dXJuIG51bGw7CiAgICAgIGZpbmFsIGdvb2dsZUF1dGggPSBhd2FpdCBnb29nbGVVc2VyLmF1dGhlbnRpY2F0aW9uOwogICAgICBmaW5hbCBjcmVkID0gR29vZ2xlQXV0aFByb3ZpZGVyLmNyZWRlbnRpYWwoCiAgICAgICAgYWNjZXNzVG9rZW46IGdvb2dsZUF1dGguYWNjZXNzVG9rZW4sCiAgICAgICAgaWRUb2tlbjogZ29vZ2xlQXV0aC5pZFRva2VuLAogICAgICApOwogICAgICBmaW5hbCByZXN1bHQgPSBhd2FpdCBfYXV0aC5zaWduSW5XaXRoQ3JlZGVudGlhbChjcmVkKTsKICAgICAgcmV0dXJuIHJlc3VsdC51c2VyOwogICAgfSBjYXRjaCAoZSkgewogICAgICBwcmludCgnR29vZ2xlIFNpZ25JbiBFcnJvcjogJGUnKTsKICAgICAgcmV0aHJvdzsKICAgIH0KICB9CgogIEZ1dHVyZTx2b2lkPiBzYXZlVXNlclJvbGUoU3RyaW5nIHVpZCwgU3RyaW5nIGVtYWlsLCBTdHJpbmcgbmFtZSwgU3RyaW5nIHJvbGUpIGFzeW5jIHsKICAgIGF3YWl0IF9kYi5jb2xsZWN0aW9uKCd1c2VycycpLmRvYyh1aWQpLnNldCh7CiAgICAgICd1aWQnOiB1aWQsCiAgICAgICdlbWFpbCc6IGVtYWlsLAogICAgICAnbmFtZSc6IG5hbWUsCiAgICAgICdyb2xlJzogcm9sZSwgLy8gY3VzdG9tZXIgb3IgcHJvdmlkZXIKICAgICAgJ2NyZWF0ZWRBdCc6IEZpZWxkVmFsdWUuc2VydmVyVGltZXN0YW1wKCksCiAgICB9LCBTZXRPcHRpb25zKG1lcmdlOiB0cnVlKSk7CiAgfQoKICBGdXR1cmU8U3RyaW5nPz4gZ2V0VXNlclJvbGUoU3RyaW5nIHVpZCkgYXN5bmMgewogICAgZmluYWwgZG9jID0gYXdhaXQgX2RiLmNvbGxlY3Rpb24oJ3VzZXJzJykuZG9jKHVpZCkuZ2V0KCk7CiAgICByZXR1cm4gZG9jLmRhdGEoKT9bJ3JvbGUnXSBhcyBTdHJpbmc/OwogIH0KCiAgRnV0dXJlPHZvaWQ+IHNpZ25PdXQoKSBhc3luYyB7CiAgICBhd2FpdCBHb29nbGVTaWduSW4oKS5zaWduT3V0KCk7CiAgICBhd2FpdCBfYXV0aC5zaWduT3V0KCk7CiAgfQp9Cg==' | base64 -d > lib/services/auth_service.dart
           echo 'CmltcG9ydCAncGFja2FnZTpjbG91ZF9maXJlc3RvcmUvY2xvdWRfZmlyZXN0b3JlLmRhcnQnOwppbXBvcnQgJy4uL21vZGVscy9wcm92aWRlcl9tb2RlbC5kYXJ0JzsKCmNsYXNzIEZpcmVzdG9yZVNlcnZpY2UgewogIGZpbmFsIF9kYiA9IEZpcmViYXNlRmlyZXN0b3JlLmluc3RhbmNlOwoKICBTdHJlYW08TGlzdDxQcm92aWRlck1vZGVsPj4gc3RyZWFtUHJvdmlkZXJzKHtTdHJpbmc/IGNpdHksIFN0cmluZz8gY2F0ZWdvcnksIFN0cmluZz8gY291bnRyeX0pIHsKICAgIFF1ZXJ5IHF1ZXJ5ID0gX2RiLmNvbGxlY3Rpb24oJ3Byb3ZpZGVycycpLndoZXJlKCdpc09ubGluZScsIGlzRXF1YWxUbzogdHJ1ZSk7CiAgICAKICAgIGlmIChjYXRlZ29yeSAhPSBudWxsICYmIGNhdGVnb3J5LmlzTm90RW1wdHkpIHsKICAgICAgcXVlcnkgPSBxdWVyeS53aGVyZSgnY2F0ZWdvcnknLCBpc0VxdWFsVG86IGNhdGVnb3J5KTsKICAgIH0KICAgIC8vIHdvcmxkd2lkZTogZmlsdGVyIGJ5IGNpdHkgaWYgcHJvdmlkZWQgZWxzZSBzaG93IGFsbAogICAgaWYgKGNpdHkgIT0gbnVsbCAmJiBjaXR5LmlzTm90RW1wdHkpIHsKICAgICAgcXVlcnkgPSBxdWVyeS53aGVyZSgnY2l0eScsIGlzRXF1YWxUbzogY2l0eSk7CiAgICB9CiAgICBxdWVyeSA9IHF1ZXJ5Lm9yZGVyQnkoJ2NyZWF0ZWRBdCcsIGRlc2NlbmRpbmc6IHRydWUpOwogICAgCiAgICByZXR1cm4gcXVlcnkuc25hcHNob3RzKCkubWFwKChzbmFwKSA9PiBzbmFwLmRvY3MubWFwKChkKSA9PiBQcm92aWRlck1vZGVsLmZyb21Eb2MoZCkpLnRvTGlzdCgpKTsKICB9CgogIEZ1dHVyZTx2b2lkPiBjcmVhdGVPclVwZGF0ZVByb3ZpZGVyKFByb3ZpZGVyTW9kZWwgcHJvdmlkZXIpIGFzeW5jIHsKICAgIGF3YWl0IF9kYi5jb2xsZWN0aW9uKCdwcm92aWRlcnMnKS5kb2MocHJvdmlkZXIudWlkKS5zZXQocHJvdmlkZXIudG9NYXAoKSwgU2V0T3B0aW9ucyhtZXJnZTogdHJ1ZSkpOwogIH0KCiAgRnV0dXJlPHZvaWQ+IGNyZWF0ZUJvb2tpbmcoe3JlcXVpcmVkIFN0cmluZyBjdXN0b21lcklkLCByZXF1aXJlZCBTdHJpbmcgcHJvdmlkZXJJZCwgcmVxdWlyZWQgU3RyaW5nIHNlcnZpY2V9KSBhc3luYyB7CiAgICBhd2FpdCBfZGIuY29sbGVjdGlvbignYm9va2luZ3MnKS5hZGQoewogICAgICAnY3VzdG9tZXJJZCc6IGN1c3RvbWVySWQsCiAgICAgICdwcm92aWRlcklkJzogcHJvdmlkZXJJZCwKICAgICAgJ3NlcnZpY2UnOiBzZXJ2aWNlLAogICAgICAnc3RhdHVzJzogJ3BlbmRpbmcnLAogICAgICAnY3JlYXRlZEF0JzogRmllbGRWYWx1ZS5zZXJ2ZXJUaW1lc3RhbXAoKSwKICAgIH0pOwogIH0KCiAgRnV0dXJlPHZvaWQ+IHRvZ2dsZU9ubGluZShTdHJpbmcgdWlkLCBib29sIG9ubGluZSkgYXN5bmMgewogICAgYXdhaXQgX2RiLmNvbGxlY3Rpb24oJ3Byb3ZpZGVycycpLmRvYyh1aWQpLnVwZGF0ZSh7J2lzT25saW5lJzogb25saW5lfSk7CiAgfQp9Cg==' | base64 -d > lib/services/firestore_service.dart
           echo 'ewogICJwcm9qZWN0X2luZm8iOiB7CiAgICAicHJvamVjdF9udW1iZXIiOiAiNjQ2NzYzNjY5MTc4IiwKICAgICJwcm9qZWN0X2lkIjogIm1haGlyLTk1MTg4IiwKICAgICJzdG9yYWdlX2J1Y2tldCI6ICJtYWhpci05NTE4OC5maXJlYmFzZXN0b3JhZ2UuYXBwIgogIH0sCiAgImNsaWVudCI6IFsKICAgIHsKICAgICAgImNsaWVudF9pbmZvIjogewogICAgICAgICJtb2JpbGVzZGtfYXBwX2lkIjogIjE6NjQ2NzYzNjY5MTc4OmFuZHJvaWQ6NzM4NjI5MzI3MTEwZGNhMGIzODQ4MyIsCiAgICAgICAgImFuZHJvaWRfY2xpZW50X2luZm8iOiB7CiAgICAgICAgICAicGFja2FnZV9uYW1lIjogImNvbS5leGFtcGxlLmFwcCIKICAgICAgICB9CiAgICAgIH0sCiAgICAgICJvYXV0aF9jbGllbnQiOiBbXSwKICAgICAgImFwaV9rZXkiOiBbCiAgICAgICAgewogICAgICAgICAgImN1cnJlbnRfa2V5IjogIkFJemFTeURxMjRwTTBLb21pcjNtUXczMm5rTkJiQW9jbHFUY0FpMCIKICAgICAgICB9CiAgICAgIF0sCiAgICAgICJzZXJ2aWNlcyI6IHsKICAgICAgICAiYXBwaW52aXRlX3NlcnZpY2UiOiB7CiAgICAgICAgICAib3RoZXJfcGxhdGZvcm1fb2F1dGhfY2xpZW50IjogW10KICAgICAgICB9CiAgICAgIH0KICAgIH0KICBdLAogICJjb25maWd1cmF0aW9uX3ZlcnNpb24iOiAiMSIKfQ==' | base64 -d > android/app/google-services.json
-          echo "=== Patching Android for Firebase ==="
-          # Patch android/build.gradle to add google-services classpath
+          echo "=== Patching Firebase ==="
           if [ -f "android/build.gradle" ]; then
             if ! grep -q "google-services" android/build.gradle; then
               sed -i "s/dependencies {/dependencies {\n        classpath 'com.google.gms:google-services:4.4.0'/" android/build.gradle || true
             fi
-            cat android/build.gradle
           fi
-          # Patch android/app/build.gradle to apply plugin
           if [ -f "android/app/build.gradle" ]; then
+            # Force applicationId to match google-services.json
+            sed -i "s/applicationId \".*\"/applicationId \"com.example.app\"/" android/app/build.gradle || true
             if ! grep -q "com.google.gms.google-services" android/app/build.gradle; then
               echo "apply plugin: 'com.google.gms.google-services'" >> android/app/build.gradle
             fi
-            cat android/app/build.gradle | tail -20
           fi
-          # Patch android/settings.gradle if needed
           ls -R lib
+          cat android/app/build.gradle | tail -30
       - name: Get dependencies
         run: |
           ROOT="."
@@ -61,7 +62,7 @@ jobs:
         run: |
           ROOT="."
           if [ -f "./flutter/pubspec.yaml" ]; then ROOT="./flutter"; fi
-          cd $ROOT && flutter build apk --release --verbose
+          cd $ROOT && flutter build apk --release
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
