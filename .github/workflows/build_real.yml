@@ -1,4 +1,4 @@
-name: Build Real Mahir1 APK
+name: Build Real Mahir1 APK - FINAL SIMPLE
 on:
   workflow_dispatch:
   push:
@@ -12,9 +12,10 @@ jobs:
         with:
           flutter-version: '3.22.0'
           channel: 'stable'
-      - name: Build Fresh
+      - name: Build APK Real
         run: |
           set -e
+          echo '--- Creating fresh Flutter project ---'
           rm -rf android
           flutter create --platforms=android --org com.example --project-name app --no-pub .
           rm -rf lib
@@ -464,40 +465,37 @@ jobs:
           ICAib3RoZXJfcGxhdGZvcm1fb2F1dGhfY2xpZW50IjogW10KICAgICAgICB9CiAgICAgIH0KICAg
           IH0KICBdLAogICJjb25maWd1cmF0aW9uX3ZlcnNpb24iOiAiMSIKfQ==
           B64DATA
-          echo '=== Patching Gradle for Firebase (safe patch) ==='
-          python3 <<'PY'
-          import pathlib
-          # Patch settings.gradle
-          s_path = pathlib.Path('android/settings.gradle')
-          s = s_path.read_text()
-          if 'google-services' not in s:
-              s = s.replace(
-                  'id "org.jetbrains.kotlin.android" version "1.9.10" apply false',
-                  'id "org.jetbrains.kotlin.android" version "1.9.10" apply false\n    id "com.google.gms.google-services" version "4.4.0" apply false'
-              )
-              s_path.write_text(s)
-              print('Patched settings.gradle')
-          # Patch app/build.gradle
-          a_path = pathlib.Path('android/app/build.gradle')
-          a = a_path.read_text()
-          if 'google-services' not in a:
-              a = a.replace(
-                  'id "dev.flutter.flutter-gradle-subprojects"',
-                  'id "dev.flutter.flutter-gradle-subprojects"\n    id "com.google.gms.google-services"'
-              )
-              a_path.write_text(a)
-              print('Patched app/build.gradle')
-          print('--- settings.gradle ---')
-          print(s_path.read_text())
-          print('--- app/build.gradle ---')
-          print(a_path.read_text())
-          PY
+          echo '--- Patching Firebase the OLD stable way ---'
+          # Patch android/build.gradle - add google-services classpath
+          cat > android/build.gradle <<'GRADLE'
+          buildscript {
+              ext.kotlin_version = '1.9.10'
+              repositories { google(); mavenCentral() }
+              dependencies {
+                  classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+                  classpath 'com.google.gms:google-services:4.4.0'
+              }
+          }
+          allprojects { repositories { google(); mavenCentral() } }
+          rootProject.buildDir = "../build"
+          subprojects { project.buildDir = "${rootProject.buildDir}/${project.name}" }
+          subprojects { project.evaluationDependsOn(":app") }
+          tasks.register("clean", Delete) { delete rootProject.buildDir }
+          GRADLE
+          # Patch app/build.gradle - add apply plugin at end
+          if ! grep -q 'google-services' android/app/build.gradle; then
+            echo "apply plugin: 'com.google.gms.google-services'" >> android/app/build.gradle
+          fi
+          echo '--- Checking files ---'
+          cat android/build.gradle
+          cat android/app/build.gradle | tail -20
+          cat android/app/google-services.json | head -5
       - name: Pub Get
         run: flutter pub get
       - name: Build APK
-        run: flutter build apk --release --verbose
+        run: flutter build apk --release
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: mahir1-real-apk
-          path: '**/build/app/outputs/flutter-apk/app-release.apk'
+          path: build/app/outputs/flutter-apk/app-release.apk
