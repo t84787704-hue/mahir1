@@ -1,4 +1,4 @@
-name: Build Real Mahir1 APK - FINAL SIMPLE
+name: Build Real Mahir1 APK - FINAL FIXED DART
 on:
   workflow_dispatch:
   push:
@@ -15,7 +15,6 @@ jobs:
       - name: Build APK Real
         run: |
           set -e
-          echo '--- Creating fresh Flutter project ---'
           rm -rf android
           flutter create --platforms=android --org com.example --project-name app --no-pub .
           rm -rf lib
@@ -321,15 +320,15 @@ jobs:
           ZXR1cm4gQ2FyZCgKICAgICAgICAgICAgICAgICAgICAgIG1hcmdpbjogY29uc3QgRWRnZUluc2V0
           cy5zeW1tZXRyaWMoaG9yaXpvbnRhbDogMTIsIHZlcnRpY2FsOiA2KSwKICAgICAgICAgICAgICAg
           ICAgICAgIGNoaWxkOiBMaXN0VGlsZSgKICAgICAgICAgICAgICAgICAgICAgICAgdGl0bGU6IFRl
-          eHQoJ1NlcnZpY2U6IFwke2RhdGFbJ3NlcnZpY2UnXX0nKSwKICAgICAgICAgICAgICAgICAgICAg
-          ICAgc3VidGl0bGU6IFRleHQoJ0N1c3RvbWVyOiBcJHtkYXRhWydjdXN0b21lcklkJ119XG5TdGF0
-          dXM6IFwke2RhdGFbJ3N0YXR1cyddfScpLAogICAgICAgICAgICAgICAgICAgICAgICB0cmFpbGlu
-          ZzogRWxldmF0ZWRCdXR0b24ob25QcmVzc2VkOiAoKSA9PiBGaXJlYmFzZUZpcmVzdG9yZS5pbnN0
-          YW5jZS5jb2xsZWN0aW9uKCdib29raW5ncycpLmRvYyhkb2MuaWQpLnVwZGF0ZSh7J3N0YXR1cyc6
-          ICdhY2NlcHRlZCd9KSwgY2hpbGQ6IGNvbnN0IFRleHQoJ0FjY2VwdCcpKSwKICAgICAgICAgICAg
-          ICAgICAgICAgICksCiAgICAgICAgICAgICAgICAgICAgKTsKICAgICAgICAgICAgICAgICAgfSku
-          dG9MaXN0KCksCiAgICAgICAgICAgICAgICApOwogICAgICAgICAgICAgIH0sCiAgICAgICAgICAg
-          ICksCiAgICAgICAgICApCiAgICAgICAgXSwKICAgICAgKSwKICAgICk7CiAgfQp9Cg==
+          eHQoIlNlcnZpY2U6ICR7ZGF0YVsnc2VydmljZSddfSIpLAogICAgICAgICAgICAgICAgICAgICAg
+          ICBzdWJ0aXRsZTogVGV4dCgiQ3VzdG9tZXI6ICR7ZGF0YVsnY3VzdG9tZXJJZCddfVxuU3RhdHVz
+          OiAke2RhdGFbJ3N0YXR1cyddfSIpLAogICAgICAgICAgICAgICAgICAgICAgICB0cmFpbGluZzog
+          RWxldmF0ZWRCdXR0b24ob25QcmVzc2VkOiAoKSA9PiBGaXJlYmFzZUZpcmVzdG9yZS5pbnN0YW5j
+          ZS5jb2xsZWN0aW9uKCdib29raW5ncycpLmRvYyhkb2MuaWQpLnVwZGF0ZSh7J3N0YXR1cyc6ICdh
+          Y2NlcHRlZCd9KSwgY2hpbGQ6IGNvbnN0IFRleHQoJ0FjY2VwdCcpKSwKICAgICAgICAgICAgICAg
+          ICAgICAgICksCiAgICAgICAgICAgICAgICAgICAgKTsKICAgICAgICAgICAgICAgICAgfSkudG9M
+          aXN0KCksCiAgICAgICAgICAgICAgICApOwogICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICks
+          CiAgICAgICAgICApCiAgICAgICAgXSwKICAgICAgKSwKICAgICk7CiAgfQp9Cg==
           B64DATA
           cat <<'B64DATA' | base64 -d > lib/screens/provider/provider_setup_screen.dart
           CmltcG9ydCAncGFja2FnZTpmbHV0dGVyL21hdGVyaWFsLmRhcnQnOwppbXBvcnQgJ3BhY2thZ2U6
@@ -465,8 +464,7 @@ jobs:
           ICAib3RoZXJfcGxhdGZvcm1fb2F1dGhfY2xpZW50IjogW10KICAgICAgICB9CiAgICAgIH0KICAg
           IH0KICBdLAogICJjb25maWd1cmF0aW9uX3ZlcnNpb24iOiAiMSIKfQ==
           B64DATA
-          echo '--- Patching Firebase the OLD stable way ---'
-          # Patch android/build.gradle - add google-services classpath
+          echo '--- Patching Firebase ---'
           cat > android/build.gradle <<'GRADLE'
           buildscript {
               ext.kotlin_version = '1.9.10'
@@ -482,14 +480,9 @@ jobs:
           subprojects { project.evaluationDependsOn(":app") }
           tasks.register("clean", Delete) { delete rootProject.buildDir }
           GRADLE
-          # Patch app/build.gradle - add apply plugin at end
           if ! grep -q 'google-services' android/app/build.gradle; then
             echo "apply plugin: 'com.google.gms.google-services'" >> android/app/build.gradle
           fi
-          echo '--- Checking files ---'
-          cat android/build.gradle
-          cat android/app/build.gradle | tail -20
-          cat android/app/google-services.json | head -5
       - name: Pub Get
         run: flutter pub get
       - name: Build APK
