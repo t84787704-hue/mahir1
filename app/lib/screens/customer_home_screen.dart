@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'search_screen.dart';
 import '../services/mock_data.dart';
 import '../services/category_service.dart';
 import '../widgets/worker_card.dart';
