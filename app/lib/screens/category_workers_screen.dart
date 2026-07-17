@@ -40,3 +40,4 @@ class CategoryWorkersScreen extends StatelessWidget {
             ),
     );
   }
+}
