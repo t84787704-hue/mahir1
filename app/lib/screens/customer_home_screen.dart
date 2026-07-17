@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'search_screen.dart';
+import 'category_workers_screen.dart';
 import '../services/mock_data.dart';
 import '../services/category_service.dart';
 import '../widgets/worker_card.dart';
@@ -29,40 +30,41 @@ class CustomerHomeScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             GestureDetector(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const SearchScreen(),
-      ),
-    );
-  },
-  child: Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 14,
-    ),
-    decoration: BoxDecoration(
-      color: Colors.grey.shade100,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        const Icon(
-          Icons.search,
-          color: Colors.grey,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          'Search any service...',
-          style: TextStyle(
-            color: Colors.grey.shade600,
-          ),
-        ),
-      ],
-    ),
-  ),
-),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SearchScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Search any service...',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 24),
 
             const Text(
@@ -90,10 +92,12 @@ class CustomerHomeScreen extends StatelessWidget {
                 return CategoryCard(
                   category: CategoryService.categories[index],
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          CategoryService.categories[index].name,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CategoryWorkersScreen(
+                          category:
+                              CategoryService.categories[index].name,
                         ),
                       ),
                     );
