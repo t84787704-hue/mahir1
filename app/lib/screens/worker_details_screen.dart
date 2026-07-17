@@ -100,8 +100,14 @@ class WorkerDetailsScreen extends StatelessWidget {
                       title: const Text("City"),
                       subtitle: Text(worker.city),
                     ),
-                    
-                                        const Divider(),
+
+                    const Divider(),
+
+                    ListTile(
+                      leading: const Icon(Icons.star),
+                      title: const Text("Rating"),
+                      subtitle: Text("${worker.rating} ⭐"),
+                    ),                    const Divider(),
 
                     ListTile(
                       leading: const Icon(Icons.assignment),
@@ -195,18 +201,7 @@ class WorkerDetailsScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 18),
-
-
-                    const Divider(),
-
-                    ListTile(
-                      leading: const Icon(Icons.star),
-                      title: const Text("Rating"),
-                      subtitle: Text("${worker.rating} ⭐"),
-                    ),
-
-            SizedBox(
+            const SizedBox(height: 18),            SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.chat),
