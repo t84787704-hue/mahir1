@@ -15,23 +15,25 @@ class WorkerDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(worker.name),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
             CircleAvatar(
-              radius: 55,
+              radius: 60,
               backgroundColor: worker.color,
               child: Icon(
                 worker.icon,
-                size: 50,
+                size: 55,
                 color: Colors.black87,
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 15),
 
             Text(
               worker.name,
@@ -41,33 +43,47 @@ class WorkerDetailsScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
 
             if (worker.verified)
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.verified,
-                    color: Colors.blue,
-                    size: 18,
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    "Verified Mahir",
-                    style: TextStyle(
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.verified,
                       color: Colors.blue,
-                      fontWeight: FontWeight.bold,
+                      size: 18,
                     ),
-                  ),
-                ],
+                    SizedBox(width: 5),
+                    Text(
+                      "Verified Mahir",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
             const SizedBox(height: 20),
 
             Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
 
@@ -77,23 +93,23 @@ class WorkerDetailsScreen extends StatelessWidget {
                       subtitle: Text(worker.category),
                     ),
 
+                    const Divider(),
+
                     ListTile(
-                      leading: const Icon(Icons.location_on),
+                      leading: const Icon(Icons.location_city),
                       title: const Text("City"),
                       subtitle: Text(worker.city),
                     ),
-
-                    ListTile(
-                      leading: const Icon(Icons.star),
-                      title: const Text("Rating"),
-                      subtitle: Text("${worker.rating} ⭐"),
-                    ),
+                    
+                                        const Divider(),
 
                     ListTile(
                       leading: const Icon(Icons.assignment),
                       title: const Text("Completed Jobs"),
-                      subtitle: Text(worker.totalJobs.toString()),
+                      subtitle: Text("${worker.totalJobs} Jobs"),
                     ),
+
+                    const Divider(),
 
                     ListTile(
                       leading: const Icon(Icons.attach_money),
@@ -110,29 +126,42 @@ class WorkerDetailsScreen extends StatelessWidget {
 
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                "About",
+              child: const Text(
+                "About Mahir",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
 
-            Text(
-              worker.bio,
-              style: const TextStyle(
-                fontSize: 15,
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  worker.bio,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    height: 1.5,
+                  ),
+                ),
               ),
             ),
 
-            const SizedBox(height: 30),            Row(
+            const SizedBox(height: 25),
+
+            Row(
               children: [
 
                 Expanded(
                   child: OutlinedButton.icon(
+                    icon: const Icon(Icons.call),
+                    label: const Text("Call"),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -142,15 +171,15 @@ class WorkerDetailsScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.call),
-                    label: const Text("Call"),
                   ),
                 ),
 
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
 
                 Expanded(
                   child: OutlinedButton.icon(
+                    icon: const Icon(Icons.message),
+                    label: const Text("WhatsApp"),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -160,19 +189,28 @@ class WorkerDetailsScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.message),
-                    label: const Text("WhatsApp"),
                   ),
                 ),
 
               ],
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 18),
+
+
+                    const Divider(),
+
+                    ListTile(
+                      leading: const Icon(Icons.star),
+                      title: const Text("Rating"),
+                      subtitle: Text("${worker.rating} ⭐"),
+                    ),
 
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
+                icon: const Icon(Icons.chat),
+                label: const Text("Chat Now"),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -183,8 +221,6 @@ class WorkerDetailsScreen extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.chat),
-                label: const Text("Chat Now"),
               ),
             ),
 
@@ -192,6 +228,7 @@ class WorkerDetailsScreen extends StatelessWidget {
 
             SizedBox(
               width: double.infinity,
+              height: 52,
               child: ElevatedButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -200,4 +237,23 @@ class WorkerDetailsScreen extends StatelessWidget {
                         "Booking request sent to ${worker.name}",
                       ),
                     ),
-                 
+                  );
+                },
+                child: Text(
+                  "Book Now (${worker.price})",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+          ],
+        ),
+      ),
+    );
+  }
+}
