@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/worker_model.dart';
 import 'chat_screen.dart';
+import 'booking_screen.dart';
 
 class WorkerDetailsScreen extends StatelessWidget {
   final WorkerModel worker;
@@ -107,7 +108,9 @@ class WorkerDetailsScreen extends StatelessWidget {
                       leading: const Icon(Icons.star),
                       title: const Text("Rating"),
                       subtitle: Text("${worker.rating} ⭐"),
-                    ),                    const Divider(),
+                    ),
+
+                    const Divider(),
 
                     ListTile(
                       leading: const Icon(Icons.assignment),
@@ -162,7 +165,7 @@ class WorkerDetailsScreen extends StatelessWidget {
             const SizedBox(height: 25),
 
             Row(
-              children: [
+              children: [              children: [
 
                 Expanded(
                   child: OutlinedButton.icon(
@@ -171,9 +174,7 @@ class WorkerDetailsScreen extends StatelessWidget {
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            "Call: ${worker.phone}",
-                          ),
+                          content: Text("Call: ${worker.phone}"),
                         ),
                       );
                     },
@@ -201,7 +202,9 @@ class WorkerDetailsScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 18),            SizedBox(
+            const SizedBox(height: 18),
+
+            SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.chat),
@@ -224,23 +227,25 @@ class WorkerDetailsScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: 52,
-              child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "Booking request sent to ${worker.name}",
-                      ),
-                    ),
-                  );
-                },
-                child: Text(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.calendar_month),
+                label: Text(
                   "Book Now (${worker.price})",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BookingScreen(
+                        worker: worker,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
 
