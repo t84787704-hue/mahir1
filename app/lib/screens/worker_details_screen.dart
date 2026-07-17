@@ -165,7 +165,7 @@ class WorkerDetailsScreen extends StatelessWidget {
             const SizedBox(height: 25),
 
             Row(
-              children:                [
+              children: [
 
                 Expanded(
                   child: OutlinedButton.icon(
