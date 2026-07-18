@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import '../data/booking_history.dart';
 import '../models/worker_model.dart';
+import '../models/booking_status.dart';
 
 class BookingHistoryScreen extends StatelessWidget {
   const BookingHistoryScreen({super.key});
+
+  Color getStatusColor(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return Colors.orange;
+      case BookingStatus.accepted:
+        return Colors.green;
+      case BookingStatus.rejected:
+        return Colors.red;
+      case BookingStatus.completed:
+        return Colors.blue;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,50 +25,63 @@ class BookingHistoryScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("My Bookings"),
         centerTitle: true,
-        toolbarHeight: 60,
       ),
-      body: SafeArea(
-        child: BookingHistory.bookings.isEmpty
-            ? const Center(
-                child: Text(
-                  "No bookings yet",
-                  style: TextStyle(fontSize: 18),
-                ),
-              )
-            : ListView.builder(
-                padding: const EdgeInsets.all(12),
-                itemCount: BookingHistory.bookings.length,
-                itemBuilder: (context, index) {
-                  final booking = BookingHistory.bookings[index];
-                  final WorkerModel worker =
-                      booking["worker"] as WorkerModel;
+      body: BookingHistory.bookings.isEmpty
+          ? const Center(
+              child: Text(
+                "No bookings yet",
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: BookingHistory.bookings.length,
+              itemBuilder: (context, index) {
+                final booking = BookingHistory.bookings[index];
+                final WorkerModel worker =
+                    booking["worker"] as WorkerModel;
 
-                  return Card(
-                    elevation: 3,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: worker.color,
-                        child: Icon(
-                          worker.icon,
-                          color: Colors.black,
-                        ),
-                      ),
-                      title: Text(worker.name),
-                      subtitle: Text(
-                        "${booking["date"]} • ${booking["time"]}\nStatus: ${booking["status"]}",
-                      ),
-                      trailing: Text(
-                        booking["price"],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                final BookingStatus status =
+                    booking["status"] as BookingStatus;
+
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: worker.color,
+                      child: Icon(
+                        worker.icon,
+                        color: Colors.black,
                       ),
                     ),
-                  );
-                },
-              ),
-      ),
+                    title: Text(worker.name),
+                    subtitle: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${booking["date"]} • ${booking["time"]}",
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          status.text,
+                          style: TextStyle(
+                            color: getStatusColor(status),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: Text(
+                      booking["price"],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
