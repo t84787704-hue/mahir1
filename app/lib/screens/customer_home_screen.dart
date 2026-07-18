@@ -70,7 +70,7 @@ class CustomerHomeScreen extends StatelessWidget {
 
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 56,
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.history),
                 label: const Text(
