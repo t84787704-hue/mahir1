@@ -1,4 +1,5 @@
 import '../models/worker_model.dart';
+import '../models/booking_status.dart';
 
 class BookingHistory {
   static final List<Map<String, dynamic>> bookings = [];
@@ -18,7 +19,14 @@ class BookingHistory {
       "address": address,
       "problem": problem,
       "price": price,
-      "status": "Pending",
+      "status": BookingStatus.pending,
     });
+  }
+
+  static void updateStatus(
+    int index,
+    BookingStatus status,
+  ) {
+    bookings[index]["status"] = status;
   }
 }
