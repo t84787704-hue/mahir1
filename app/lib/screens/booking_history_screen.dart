@@ -1,7 +1,10 @@
+import 'review_screen.dart';
+
 import 'package:flutter/material.dart';
 import '../data/booking_history.dart';
 import '../models/worker_model.dart';
 import '../models/booking_status.dart';
+import 'review_screen.dart';
 
 class BookingHistoryScreen extends StatelessWidget {
   const BookingHistoryScreen({super.key});
@@ -72,11 +75,36 @@ class BookingHistoryScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    trailing: Text(
-                      booking["price"],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          booking["price"],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        if (status == BookingStatus.completed)
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ReviewScreen(
+                                    worker: worker,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "Review",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 );
