@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/worker_model.dart';
+import '../data/booking_history.dart';
 import 'booking_success_screen.dart';
 
 class BookingScreen extends StatefulWidget {
@@ -90,9 +91,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
             const Text(
               "Select Date",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
@@ -114,9 +113,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
             const Text(
               "Select Time",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
@@ -193,6 +190,16 @@ class _BookingScreenState extends State<BookingScreen> {
                     );
                     return;
                   }
+
+                  BookingHistory.addBooking(
+                    worker: widget.worker,
+                    date:
+                        "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                    time: selectedTime!.format(context),
+                    address: addressController.text.trim(),
+                    problem: problemController.text.trim(),
+                    price: widget.worker.price,
+                  );
 
                   Navigator.pushReplacement(
                     context,
