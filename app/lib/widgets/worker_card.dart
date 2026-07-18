@@ -86,7 +86,7 @@ class WorkerCard extends StatelessWidget {
                       const SizedBox(height: 10),
 
                       Text(
-                        worker.description,
+                        worker.bio,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
