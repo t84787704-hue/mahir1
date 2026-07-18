@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/worker_model.dart';
+import '../models/booking_status.dart';
+import '../data/booking_history.dart';
 
 class RequestCard extends StatelessWidget {
   final WorkerModel worker;
@@ -13,6 +15,8 @@ class RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int index = BookingHistory.bookings.indexOf(booking);
+
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 12),
@@ -21,20 +25,13 @@ class RequestCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Row(
               children: [
-
                 CircleAvatar(
                   backgroundColor: worker.color,
-                  child: Icon(
-                    worker.icon,
-                    color: Colors.black,
-                  ),
+                  child: Icon(worker.icon, color: Colors.black),
                 ),
-
                 const SizedBox(width: 12),
-
                 Expanded(
                   child: Text(
                     worker.name,
@@ -44,7 +41,6 @@ class RequestCard extends StatelessWidget {
                     ),
                   ),
                 ),
-
               ],
             ),
 
@@ -56,15 +52,28 @@ class RequestCard extends StatelessWidget {
             Text("📝 Problem: ${booking["problem"]}"),
             Text("💰 Price: ${booking["price"]}"),
 
+            const SizedBox(height: 8),
+
+            Text(
+              "Status: ${(booking["status"] as BookingStatus).text}",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
             const SizedBox(height: 14),
 
             Row(
               children: [
-
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: ElevatedButton(
                     onPressed: () {
-                      booking["status"] = "Accepted";
+                      BookingHistory.updateStatus(
+                        index,
+                        BookingStatus.accepted,
+                      );
+
+                      (context as Element).markNeedsBuild();
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -72,17 +81,21 @@ class RequestCard extends StatelessWidget {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.check),
-                    label: const Text("Accept"),
+                    child: const Text("Accept"),
                   ),
                 ),
 
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
 
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: OutlinedButton(
                     onPressed: () {
-                      booking["status"] = "Rejected";
+                      BookingHistory.updateStatus(
+                        index,
+                        BookingStatus.rejected,
+                      );
+
+                      (context as Element).markNeedsBuild();
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -90,14 +103,35 @@ class RequestCard extends StatelessWidget {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.close),
-                    label: const Text("Reject"),
+                    child: const Text("Reject"),
                   ),
                 ),
-
               ],
             ),
 
+            const SizedBox(height: 8),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.task_alt),
+                label: const Text("Complete Job"),
+                onPressed: () {
+                  BookingHistory.updateStatus(
+                    index,
+                    BookingStatus.completed,
+                  );
+
+                  (context as Element).markNeedsBuild();
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Job Completed"),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
