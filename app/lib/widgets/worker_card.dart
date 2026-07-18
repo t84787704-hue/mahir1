@@ -1,120 +1,122 @@
 import 'package:flutter/material.dart';
 import '../models/worker_model.dart';
-import '../models/booking_status.dart';
-import '../data/booking_history.dart';
+import '../screens/booking_screen.dart';
 
-class RequestCard extends StatelessWidget {
+class WorkerCard extends StatelessWidget {
   final WorkerModel worker;
-  final Map<String, dynamic> booking;
 
-  const RequestCard({
+  const WorkerCard({
     super.key,
     required this.worker,
-    required this.booking,
   });
 
   @override
   Widget build(BuildContext context) {
-    final int index = BookingHistory.bookings.indexOf(booking);
-
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
             Row(
               children: [
+
                 CircleAvatar(
+                  radius: 28,
                   backgroundColor: worker.color,
                   child: Icon(
                     worker.icon,
                     color: Colors.black,
+                    size: 28,
                   ),
                 ),
 
                 const SizedBox(width: 12),
 
                 Expanded(
-                  child: Text(
-                    worker.name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+
+                      Text(
+                        worker.name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      Text(
+                        worker.category,
+                        style: TextStyle(
+                          color: Colors.grey.shade700,
+                        ),
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      Row(
+                        children: [
+
+                          const Icon(
+                            Icons.star,
+                            color: Colors.orange,
+                            size: 18,
+                          ),
+
+                          const SizedBox(width: 4),
+
+                          Text(
+                            worker.rating.toString(),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Text(
+                            worker.city,
+                          ),
+
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+
+                      Text(
+                        worker.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
-            ),
-
-            const SizedBox(height: 12),
-
-            Text("📅 Date: ${booking["date"]}"),
-            Text("⏰ Time: ${booking["time"]}"),
-            Text("📍 Address: ${booking["address"]}"),
-            Text("📝 Problem: ${booking["problem"]}"),
-            Text("💰 Price: ${booking["price"]}"),
-
-            const SizedBox(height: 8),
-
-            Text(
-              "Status: ${(booking["status"] as BookingStatus).text}",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
             ),
 
             const SizedBox(height: 14),
 
-            Row(
-              children: [
-
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      BookingHistory.updateStatus(
-                        index,
-                        BookingStatus.accepted,
-                      );
-
-                      (context as Element).markNeedsBuild();
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Booking Accepted"),
-                        ),
-                      );
-                    },
-                    child: const Text("Accept"),
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      BookingHistory.updateStatus(
-                        index,
-                        BookingStatus.rejected,
-                      );
-
-                      (context as Element).markNeedsBuild();
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Booking Rejected"),
-                        ),
-                      );
-                    },
-                    child: const Text("Reject"),
-                  ),
-                ),
-
-              ],
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.calendar_today),
+                label: const Text("Book Now"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BookingScreen(
+                        worker: worker,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
