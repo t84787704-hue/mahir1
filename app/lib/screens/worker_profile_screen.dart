@@ -116,3 +116,75 @@ class WorkerProfileScreen extends StatelessWidget {
     );
   }
 }
+const SizedBox(height: 20),
+
+Row(
+  children: [
+
+    Expanded(
+      child: ElevatedButton.icon(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Call feature coming soon"),
+            ),
+          );
+        },
+        icon: const Icon(Icons.call),
+        label: const Text("Call"),
+      ),
+    ),
+
+    const SizedBox(width: 12),
+
+    Expanded(
+      child: ElevatedButton.icon(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("WhatsApp feature coming soon"),
+            ),
+          );
+        },
+        icon: const Icon(Icons.chat),
+        label: const Text("WhatsApp"),
+      ),
+    ),
+
+  ],
+),
+
+const SizedBox(height: 25),
+
+const Align(
+  alignment: Alignment.centerLeft,
+  child: Text(
+    "Customer Reviews",
+    style: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+
+const SizedBox(height: 12),
+
+const Card(
+  child: ListTile(
+    leading: CircleAvatar(
+      child: Icon(Icons.person),
+    ),
+    title: Text("⭐⭐⭐⭐⭐"),
+    subtitle: Text("Excellent service. Highly recommended."),
+  ),
+),
+
+const Card(
+  child: ListTile(
+    leading: CircleAvatar(
+      child: Icon(Icons.person),
+    ),
+    title: Text("⭐⭐⭐⭐"),
+    subtitle: Text("Very professional worker."),
+  ),
+),
