@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/worker_model.dart';
+import 'chat_screen.dart';
 
 class WorkerProfileScreen extends StatelessWidget {
   final WorkerModel worker;
@@ -130,6 +131,26 @@ class WorkerProfileScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+
+            const SizedBox(height: 12),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChatScreen(
+                        name: worker.name,
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.message),
+                label: const Text("Chat Now"),
+              ),
             ),
 
             const SizedBox(height: 25),
