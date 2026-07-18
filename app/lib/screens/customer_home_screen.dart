@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'search_screen.dart';
+import 'booking_history_screen.dart';
 import 'category_workers_screen.dart';
 import '../services/mock_data.dart';
 import '../services/category_service.dart';
@@ -62,6 +63,31 @@ class CustomerHomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.history),
+                label: const Text(
+                  "Booking History",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BookingHistoryScreen(),
+                    ),
+                  );
+                },
               ),
             ),
 
