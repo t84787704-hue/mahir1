@@ -10,11 +10,15 @@ class WorkerModel {
   final String price;
   final IconData icon;
   final Color color;
+
+  // Description
   final String bio;
 
-  // New Fields
+  // Contact
   final String phone;
   final String whatsapp;
+
+  // Verification
   final bool verified;
 
   WorkerModel({
@@ -27,8 +31,7 @@ class WorkerModel {
     required this.price,
     required this.icon,
     required this.color,
-    this.bio = 'Gmail Verified Professional',
-
+    this.bio = 'Verified Professional',
     this.phone = '+966500000000',
     this.whatsapp = '+966500000000',
     this.verified = true,
