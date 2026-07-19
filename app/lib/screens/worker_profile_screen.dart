@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../models/worker_model.dart';
-import 'chat_screen.dart';
+import 'booking_screen.dart';
 
 class WorkerProfileScreen extends StatelessWidget {
   final WorkerModel worker;
@@ -9,6 +11,44 @@ class WorkerProfileScreen extends StatelessWidget {
     super.key,
     required this.worker,
   });
+
+  Future<void> _makePhoneCall(BuildContext context) async {
+    final Uri phoneUri = Uri(
+      scheme: 'tel',
+      path: worker.phone,
+    );
+
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Unable to open phone dialer'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _openWhatsApp(BuildContext context) async {
+    final phone = worker.whatsapp.replaceAll('+', '');
+
+    final Uri whatsappUri = Uri.parse(
+      'https://wa.me/$phone',
+    );
+
+    if (await canLaunchUrl(whatsappUri)) {
+      await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('WhatsApp is not installed'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +59,7 @@ class WorkerProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
         child: Column(
-          children: [
-            CircleAvatar(
+          children: [            CircleAvatar(
               radius: 50,
               backgroundColor: worker.color,
               child: Icon(
@@ -86,30 +125,13 @@ class WorkerProfileScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 25),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.calendar_today),
-                label: const Text("Book Now"),
-              ),
-            ),
-
             const SizedBox(height: 20),
 
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Call feature coming soon"),
-                        ),
-                      );
-                    },
+                    onPressed: () => _makePhoneCall(context),
                     icon: const Icon(Icons.call),
                     label: const Text("Call"),
                   ),
@@ -119,13 +141,7 @@ class WorkerProfileScreen extends StatelessWidget {
 
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("WhatsApp feature coming soon"),
-                        ),
-                      );
-                    },
+                    onPressed: () => _openWhatsApp(context),
                     icon: const Icon(Icons.chat),
                     label: const Text("WhatsApp"),
                   ),
@@ -133,23 +149,23 @@ class WorkerProfileScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
 
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
+                icon: const Icon(Icons.calendar_today),
+                label: const Text("Book Now"),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ChatScreen(
-                        name: worker.name,
+                      builder: (_) => BookingScreen(
+                        worker: worker,
                       ),
                     ),
                   );
                 },
-                icon: const Icon(Icons.message),
-                label: const Text("Chat Now"),
               ),
             ),
 
