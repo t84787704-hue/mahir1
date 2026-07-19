@@ -13,38 +13,38 @@ class WorkerProfileScreen extends StatelessWidget {
   });
 
   Future<void> _makePhoneCall(BuildContext context) async {
-    final Uri phoneUri = Uri(
-      scheme: 'tel',
-      path: worker.phone,
-    );
+    final Uri phoneUri = Uri.parse("tel:${worker.phone}");
 
-    if (await canLaunchUrl(phoneUri)) {
-      await launchUrl(phoneUri);
-    } else {
+    try {
+      await launchUrl(
+        phoneUri,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Unable to open phone dialer'),
+          content: Text("Unable to open phone dialer"),
         ),
       );
     }
   }
 
   Future<void> _openWhatsApp(BuildContext context) async {
-    final phone = worker.whatsapp.replaceAll('+', '');
+    final phone = worker.whatsapp.replaceAll(RegExp(r'[^0-9]'), '');
 
     final Uri whatsappUri = Uri.parse(
-      'https://wa.me/$phone',
+      "https://wa.me/$phone",
     );
 
-    if (await canLaunchUrl(whatsappUri)) {
+    try {
       await launchUrl(
         whatsappUri,
         mode: LaunchMode.externalApplication,
       );
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('WhatsApp is not installed'),
+          content: Text("Unable to open WhatsApp"),
         ),
       );
     }
@@ -59,7 +59,8 @@ class WorkerProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
         child: Column(
-          children: [            CircleAvatar(
+          children: [
+            CircleAvatar(
               radius: 50,
               backgroundColor: worker.color,
               child: Icon(
