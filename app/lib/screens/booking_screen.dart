@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../models/worker_model.dart';
-import '../data/booking_history.dart';
+import '../models/booking_model.dart';
+import '../services/booking_service.dart';
 import 'booking_success_screen.dart';
 
 class BookingScreen extends StatefulWidget {
@@ -16,6 +18,8 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
+  final BookingService bookingService = BookingService();
+
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
 
@@ -69,7 +73,6 @@ class _BookingScreenState extends State<BookingScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Text(
               widget.worker.name,
               style: const TextStyle(
@@ -88,7 +91,6 @@ class _BookingScreenState extends State<BookingScreen> {
             ),
 
             const SizedBox(height: 25),
-
             const Text(
               "Select Date",
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -164,7 +166,8 @@ class _BookingScreenState extends State<BookingScreen> {
               ),
             ),
 
-            const SizedBox(height: 30),            SizedBox(
+            const SizedBox(height: 30),
+            SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton.icon(
@@ -176,39 +179,53 @@ class _BookingScreenState extends State<BookingScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (selectedDate == null ||
                       selectedTime == null ||
                       addressController.text.trim().isEmpty ||
                       problemController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text(
-                          "Please fill all booking details",
-                        ),
+                        content: Text("Please fill all booking details"),
                       ),
                     );
                     return;
                   }
 
-                  BookingHistory.addBooking(
-                    worker: widget.worker,
+                  final booking = BookingModel(
+                    workerName: widget.worker.name,
+                    category: widget.worker.category,
                     date:
                         "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
                     time: selectedTime!.format(context),
                     address: addressController.text.trim(),
                     problem: problemController.text.trim(),
                     price: widget.worker.price,
+                    status: "Pending",
                   );
 
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BookingSuccessScreen(
-                        workerName: widget.worker.name,
+                  try {
+                    await bookingService.saveBooking(booking);
+
+                    if (!mounted) return;
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BookingSuccessScreen(
+                          workerName: widget.worker.name,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } catch (e) {
+                    if (!mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Booking Failed\n$e"),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
