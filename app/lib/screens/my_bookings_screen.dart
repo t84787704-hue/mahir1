@@ -20,6 +20,33 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     bookings = bookingService.getBookings();
   }
 
+  Future<void> refreshBookings() async {
+    setState(() {
+      bookings = bookingService.getBookings();
+    });
+
+    await bookings;
+  }
+
+  Color getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return Colors.orange;
+
+      case "accepted":
+        return Colors.blue;
+
+      case "completed":
+        return Colors.green;
+
+      case "cancelled":
+        return Colors.red;
+
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,52 +80,64 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(15),
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              final booking = list[index];
+          return RefreshIndicator(
+            onRefresh: refreshBookings,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(15),
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final booking = list[index];
 
-              return Card(
-                margin: const EdgeInsets.only(bottom: 15),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      Text(
-                        booking.workerName,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 15),
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          booking.workerName,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 10),
 
-                      Text("Category : ${booking.category}"),
-                      Text("Date : ${booking.date}"),
-                      Text("Time : ${booking.time}"),
-                      Text("Price : ${booking.price}"),
-                      Text("Address : ${booking.address}"),
+                        Text("Category : ${booking.category}"),
+                        Text("Date : ${booking.date}"),
+                        Text("Time : ${booking.time}"),
+                        Text("Price : ${booking.price}"),
+                        Text("Address : ${booking.address}"),
 
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 12),
 
-                      Text(
-                        "Status : ${booking.status}",
-                        style: TextStyle(
-                          color: booking.status == "Pending"
-                              ? Colors.orange
-                              : Colors.green,
-                          fontWeight: FontWeight.bold,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: getStatusColor(booking.status)
+                                .withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            booking.status,
+                            style: TextStyle(
+                              color: getStatusColor(booking.status),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),
