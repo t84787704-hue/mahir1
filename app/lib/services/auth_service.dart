@@ -1,7 +1,33 @@
-import '../models/user_model.dart';
-class AuthService{
-  static Future<UserModel> signInWithGmail() async {
-    await Future.delayed(Duration(seconds: 1));
-    return UserModel(id: '1', email: 'user@gmail.com', name: 'User', photoUrl: '', role: UserRole.none);
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class AuthService {
+  final SupabaseClient _supabase = Supabase.instance.client;
+
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+  }) async {
+    return await _supabase.auth.signUp(
+      email: email,
+      password: password,
+    );
   }
+
+  Future<AuthResponse> signIn({
+    required String email,
+    required String password,
+  }) async {
+    return await _supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  Future<void> signOut() async {
+    await _supabase.auth.signOut();
+  }
+
+  User? get currentUser => _supabase.auth.currentUser;
+
+  bool get isLoggedIn => currentUser != null;
 }
