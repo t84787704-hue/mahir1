@@ -18,8 +18,22 @@ class BookingModel {
     required this.address,
     required this.problem,
     required this.price,
-    required this.status,
+    this.status = "Pending",
   });
+
+  factory BookingModel.fromMap(Map<String, dynamic> map) {
+    return BookingModel(
+      id: map['id']?.toString(),
+      workerName: map['worker_name'] ?? '',
+      category: map['category'] ?? '',
+      date: map['date'] ?? '',
+      time: map['time'] ?? '',
+      address: map['address'] ?? '',
+      problem: map['problem'] ?? '',
+      price: map['price'] ?? '',
+      status: map['status'] ?? 'Pending',
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -32,19 +46,5 @@ class BookingModel {
       'price': price,
       'status': status,
     };
-  }
-
-  factory BookingModel.fromMap(Map<String, dynamic> map) {
-    return BookingModel(
-      id: map['id']?.toString(),
-      workerName: map['worker_name'] ?? '',
-      category: map['category'] ?? '',
-      date: map['date'] ?? '',
-      time: map['time'] ?? '',
-      address: map['address'] ?? '',
-      problem: map['problem'] ?? '',
-      price: map['price'] ?? '',
-      status: map['status'] ?? '',
-    );
   }
 }
