@@ -32,19 +32,29 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     switch (status.toLowerCase()) {
       case "pending":
         return Colors.orange;
-
       case "accepted":
         return Colors.blue;
-
       case "completed":
         return Colors.green;
-
       case "cancelled":
         return Colors.red;
-
       default:
         return Colors.grey;
     }
+  }
+
+  Future<void> deleteBooking(String id) async {
+    await bookingService.deleteBooking(id);
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Booking Cancelled"),
+      ),
+    );
+
+    refreshBookings();
   }
 
   @override
@@ -114,23 +124,66 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
 
                         const SizedBox(height: 12),
 
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: getStatusColor(booking.status)
-                                .withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            booking.status,
-                            style: TextStyle(
-                              color: getStatusColor(booking.status),
-                              fontWeight: FontWeight.bold,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: getStatusColor(booking.status)
+                                    .withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                booking.status,
+                                style: TextStyle(
+                                  color: getStatusColor(booking.status),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
+
+                            if (booking.status.toLowerCase() == "pending")
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () async {
+                                  if (booking.id == null) return;
+
+                                  final confirm =
+                                      await showDialog<bool>(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: const Text("Cancel Booking"),
+                                      content: const Text(
+                                        "Are you sure you want to cancel this booking?",
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          child: const Text("No"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, true),
+                                          child: const Text("Yes"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirm == true) {
+                                    await deleteBooking(booking.id!);
+                                  }
+                                },
+                              ),
+                          ],
                         ),
                       ],
                     ),
