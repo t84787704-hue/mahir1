@@ -1,4 +1,6 @@
 class BookingModel {
+  final String? id;
+
   final String workerName;
   final String category;
   final String date;
@@ -9,6 +11,7 @@ class BookingModel {
   final String status;
 
   BookingModel({
+    this.id,
     required this.workerName,
     required this.category,
     required this.date,
@@ -34,6 +37,7 @@ class BookingModel {
 
   factory BookingModel.fromMap(Map<String, dynamic> map) {
     return BookingModel(
+      id: map['id']?.toString(),
       workerName: map['worker_name'] ?? '',
       category: map['category'] ?? '',
       date: map['date'] ?? '',
