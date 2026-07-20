@@ -32,17 +32,16 @@ class _WorkerBookingsScreenState
     String id,
     String status,
   ) async {
-
     await bookingService.updateBookingStatus(
       id: id,
       status: status,
     );
 
+    if (!mounted) return;
+
     setState(() {
       _loadBookings();
     });
-
-    if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -55,21 +54,14 @@ class _WorkerBookingsScreenState
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Customer Bookings",
-        ),
+        title: const Text("Customer Bookings"),
         centerTitle: true,
       ),
-
       body: FutureBuilder<List<BookingModel>>(
-
         future: bookings,
-
         builder: (context, snapshot) {
-
           if (snapshot.connectionState ==
               ConnectionState.waiting) {
             return const Center(
@@ -102,22 +94,19 @@ class _WorkerBookingsScreenState
             padding: const EdgeInsets.all(15),
             itemCount: list.length,
             itemBuilder: (context, index) {
-
               final booking = list[index];
 
               return Card(
                 margin: const EdgeInsets.only(
                   bottom: 15,
                 ),
-
                 child: Padding(
                   padding: const EdgeInsets.all(15),
-
                   child: Column(
                     crossAxisAlignment:
                         CrossAxisAlignment.start,
-
-                    children: [                      Text(
+                    children: [
+                                            Text(
                         booking.workerName,
                         style: const TextStyle(
                           fontSize: 18,
@@ -127,29 +116,12 @@ class _WorkerBookingsScreenState
 
                       const SizedBox(height: 8),
 
-                      Text(
-                        "Category : ${booking.category}",
-                      ),
-
-                      Text(
-                        "Date : ${booking.date}",
-                      ),
-
-                      Text(
-                        "Time : ${booking.time}",
-                      ),
-
-                      Text(
-                        "Address : ${booking.address}",
-                      ),
-
-                      Text(
-                        "Problem : ${booking.problem}",
-                      ),
-
-                      Text(
-                        "Price : ${booking.price}",
-                      ),
+                      Text("Category : ${booking.category}"),
+                      Text("Date : ${booking.date}"),
+                      Text("Time : ${booking.time}"),
+                      Text("Address : ${booking.address}"),
+                      Text("Problem : ${booking.problem}"),
+                      Text("Price : ${booking.price}"),
 
                       const SizedBox(height: 12),
 
@@ -175,19 +147,17 @@ class _WorkerBookingsScreenState
                             child: ElevatedButton(
                               onPressed: booking.id == null
                                   ? null
-                                  : () {
-                                      _updateStatus(
+                                  : () => _updateStatus(
                                         booking.id!,
                                         "Accepted",
-                                      );
-                                    },
-                              child: const Text(
-                                "Accept",
-                              ),
+                                      ),
+                              child: const Text("Accept"),
                             ),
                           ),
 
-                          const SizedBox(width: 10),                          Expanded(
+                          const SizedBox(width: 10),
+
+                          Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
@@ -195,15 +165,11 @@ class _WorkerBookingsScreenState
                               ),
                               onPressed: booking.id == null
                                   ? null
-                                  : () {
-                                      _updateStatus(
+                                  : () => _updateStatus(
                                         booking.id!,
                                         "Rejected",
-                                      );
-                                    },
-                              child: const Text(
-                                "Reject",
-                              ),
+                                      ),
+                              child: const Text("Reject"),
                             ),
                           ),
 
@@ -217,15 +183,11 @@ class _WorkerBookingsScreenState
                               ),
                               onPressed: booking.id == null
                                   ? null
-                                  : () {
-                                      _updateStatus(
+                                  : () => _updateStatus(
                                         booking.id!,
                                         "Completed",
-                                      );
-                                    },
-                              child: const Text(
-                                "Complete",
-                              ),
+                                      ),
+                              child: const Text("Complete"),
                             ),
                           ),
                         ],
@@ -235,8 +197,16 @@ class _WorkerBookingsScreenState
                 ),
               );
             },
-          );        },
+          );
+        },
       ),
     );
   }
 }
+            
+          
+        
+      
+            
+          
+       
