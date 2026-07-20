@@ -13,10 +13,18 @@ class BookingService {
   Future<List<BookingModel>> getBookings() async {
     final data = await _supabase
         .from('bookings')
-        .select();
+        .select()
+        .order('created_at', ascending: false);
 
     return (data as List)
         .map((e) => BookingModel.fromMap(e))
         .toList();
+  }
+
+  Future<void> deleteBooking(String id) async {
+    await _supabase
+        .from('bookings')
+        .delete()
+        .eq('id', id);
   }
 }
