@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'worker_bookings_screen.dart';
+
 class WorkerDashboardScreen extends StatelessWidget {
   const WorkerDashboardScreen({super.key});
 
@@ -14,20 +16,41 @@ class WorkerDashboardScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.assignment),
+                label: const Text(
+                  "Customer Bookings",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const WorkerBookingsScreen(),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
             Card(
               child: ListTile(
                 leading: const Icon(
                   Icons.work,
                   color: Colors.blue,
                 ),
-                title: const Text(
-                  "Available Bookings",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                title: const Text("Available Jobs"),
                 subtitle: const Text(
-                  "View all customer requests",
+                  "View all customer bookings",
                 ),
               ),
             ),
@@ -40,15 +63,7 @@ class WorkerDashboardScreen extends StatelessWidget {
                   Icons.check_circle,
                   color: Colors.green,
                 ),
-                title: const Text(
-                  "Accepted Jobs",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  "Jobs you accepted",
-                ),
+                title: const Text("Accepted Jobs"),
               ),
             ),
 
@@ -60,15 +75,7 @@ class WorkerDashboardScreen extends StatelessWidget {
                   Icons.done_all,
                   color: Colors.orange,
                 ),
-                title: const Text(
-                  "Completed Jobs",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  "Completed services",
-                ),
+                title: const Text("Completed Jobs"),
               ),
             ),
           ],
